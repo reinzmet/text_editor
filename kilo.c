@@ -11,7 +11,7 @@
 
 /*** Data ***/ 
 struct termios orig_termios;
-
+this is a keyboard stroke
 
 /*** Terminal ***/
 void die(const char *s) {
