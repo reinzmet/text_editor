@@ -15,13 +15,16 @@ struct termios orig_termios;
 
 /*** Terminal ***/
 void die(const char *s) {
+	write(STDOUT_FILENO, "\x1b[2J", 4);
+	write(STDOUT_FILENO, "\x1b[H", 3);	
+	
 	perror(s);
 	exit(1); 
 }
 
 
 void disableRawMode() {
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == 1 );
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios) == -1 )
 	die("tcsetattr");
 }
 
@@ -56,8 +59,19 @@ char editorReadKey() {
 }
 
 /*** Output ***/
+void editorDrawRows() {
+	int y;
+	for (y = 0; y < 24; ++y) {
+		write(STDOUT_FILENO, "~\r\n",3);
+	}
+}
 void editorRefreshScreen() {
 	write(STDOUT_FILENO, "\x1b[2J", 4);
+	write(STDOUT_FILENO, "\x1b[H", 3);
+
+	 editorDrawRows();
+
+	write(STDOUT_FILENO, "\x1b[H",3);
 }
 
 
@@ -67,7 +81,9 @@ void editorProcessKeypress() {
 	char c = editorReadKey();
 	
 	switch (c) {
-		case CTRL_KEY('q'):
+		case CTRL_KEY('c'):
+		write(STDOUT_FILENO, "\x1b[2J",4);
+		write(STDOUT_FILENO, "\x1b[H", 3);
 		exit(0);
 		break;
 	}
@@ -98,5 +114,3 @@ int main () {
 	}	
 	return 0; 
 }
-
-
