@@ -25,7 +25,7 @@ void disableRawMode() {
 	die("tcsetattr");
 }
 
-void enableRawMode() { 						// This functions enables the raw mode and makes it so the text isn't echoed, like in su
+void enableRawMode() { 											// This functions enables the raw mode and makes it so the text isn't echoed, like in su
 	//struct termios raw;
 
 	//tcgetattr(STDIN_FILENO, &raw);
@@ -34,9 +34,9 @@ void enableRawMode() { 						// This functions enables the raw mode and makes it
 	atexit(disableRawMode);
 
 	struct termios raw = orig_termios;
-	raw.c_iflag &= ~(BRKINT | ICRNL| INPCK | ISTRIP | IXON); 				// Disables Ctrl-S and Ctrl-Q functions (they are used for flow control), ICRNL disables ctrl-m
+	raw.c_iflag &= ~(BRKINT | ICRNL| INPCK | ISTRIP | IXON); 	// Disables Ctrl-S and Ctrl-Q functions (they are used for flow control), ICRNL disables ctrl-m
        	raw.c_oflag &= ~(OPOST);	
-	raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG); 						// c_lflag is for local flags, and a dumping ground for other states, ICANON allows us to turn off canonical mode and input is then taken byte-by-byte, ISIG turns off Ctrl-c and ctrl-z signals, IEXTEN for disabling Ctrl-V 
+	raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG); 			// c_lflag is for local flags, and a dumping ground for other states, ICANON allows us to turn off canonical mode and input is then taken byte-by-byte, ISIG turns off Ctrl-c and ctrl-z signals, IEXTEN for disabling Ctrl-V 
 	
 	raw.c_cc[VMIN] = 0;
 	raw.c_cc[VTIME] = 1;	
